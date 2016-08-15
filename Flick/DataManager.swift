@@ -13,6 +13,9 @@ enum DataStorageType {
 }
 
 class DataManager {
+    // class vs static methods:
+    // http://stackoverflow.com/questions/29636633/static-vs-class-functions-variables-in-swift-classes
+    
     static func saveToNSUserDefaults(movies: [Movie]?) {
         guard let movies = movies else {
             print("saving nothing")

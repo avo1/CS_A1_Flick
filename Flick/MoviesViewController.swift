@@ -22,7 +22,12 @@ class MoviesViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        fetchMovie(.NSUserDefaults)
+        fetchMovie(.File)
+        
+        let documentDirectoryURL = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        print("documentDirectoryURL", documentDirectoryURL)
+        
+        
     }
     
     func fetchMovie(type: DataStorageType) {
@@ -72,9 +77,10 @@ class MoviesViewController: UIViewController {
         switch fromType {
         case .NSUserDefaults:
             movies = DataManager.loadFromNSUserDefaults()
-            
-            
             print("load from NSUserDefaults")
+        case .File:
+            movies = DataManager.loadFromFile()
+            print("load from file")
         default:
             print("ehhh, where do you want to load the data from?")
         }
@@ -85,7 +91,9 @@ class MoviesViewController: UIViewController {
         case .NSUserDefaults:
             DataManager.saveToNSUserDefaults(movies)
             print("saved to NSUserDefaults")
-            
+        case .File:
+            DataManager.saveToFile(movies)
+            print("saved to file")
         default:
             print("unknown type")
         }
