@@ -13,7 +13,7 @@ class MoviesViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var movies = [Movie]()
+    var movies: [Movie]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +22,10 @@ class MoviesViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        fetchMovie()
+        fetchMovie(.NSUserDefaults)
     }
     
-    func fetchMovie() {
+    func fetchMovie(type: DataStorageType) {
         // fetch movie
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
@@ -33,7 +33,7 @@ class MoviesViewController: UIViewController {
         let request = NSURLRequest(
             URL: url!,
             cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
-            timeoutInterval: 10)
+            timeoutInterval: 3)
         
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -46,7 +46,11 @@ class MoviesViewController: UIViewController {
                 
                 // If network error?
                 guard error == nil else {
-                    print("error")
+                    print("network error")
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.loadData(type)
+                        self.tableView.reloadData()
+                    }
                     return
                 }
                 
@@ -55,6 +59,7 @@ class MoviesViewController: UIViewController {
                         data, options:[]) as? NSDictionary {
                         // print("response: \(responseDictionary)")
                         self.movies = Movie.moviesWithArray(responseDictionary["results"] as! [NSDictionary])
+                        self.saveData(type)
                         self.tableView.reloadData()
                     }
                 }
@@ -63,8 +68,31 @@ class MoviesViewController: UIViewController {
         task.resume()
     }
     
+    func loadData(fromType: DataStorageType) {
+        switch fromType {
+        case .NSUserDefaults:
+            movies = DataManager.loadFromNSUserDefaults()
+            
+            
+            print("load from NSUserDefaults")
+        default:
+            print("ehhh, where do you want to load the data from?")
+        }
+    }
+    
+    func saveData(toType: DataStorageType) {
+        switch toType {
+        case .NSUserDefaults:
+            DataManager.saveToNSUserDefaults(movies)
+            print("saved to NSUserDefaults")
+            
+        default:
+            print("unknown type")
+        }
+    }
+    
     @IBAction func onRefresh(sender: UIBarButtonItem) {
-        fetchMovie()
+        fetchMovie(.NSUserDefaults)
     }
     
     // MARK: - Navigation
@@ -75,7 +103,7 @@ class MoviesViewController: UIViewController {
         
         let ip = tableView.indexPathForSelectedRow
         
-        nextVC.movie = movies[ip!.row]
+        nextVC.movie = movies![ip!.row]
     }
     
 }
@@ -83,18 +111,15 @@ class MoviesViewController: UIViewController {
 extension MoviesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies.count
+        return movies?.count ?? 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell") as! MovieCell!
         
-        cell.titleLabel.text = movies[indexPath.row].title
-        cell.overviewLabel.text = movies[indexPath.row].overview
-        
-        let posterUrlString = movies[indexPath.row].imageUrlString
-        
-        cell.posterImage.setImageWithURL(NSURL(string: posterUrlString)!)
+        cell.titleLabel.text = movies![indexPath.row].title
+        cell.overviewLabel.text = movies![indexPath.row].overview
+        cell.posterImage.setImageWithURL(NSURL(string: movies![indexPath.row].posterUrlString)!)
         
         return cell
     }

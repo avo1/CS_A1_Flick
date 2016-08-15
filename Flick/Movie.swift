@@ -8,17 +8,33 @@
 
 import UIKit
 
-class Movie: NSObject {
+class Movie: NSObject, NSCoding {
+    // Make sure to inherrit the class from NSObject, NScoding
+    // only then you can archive 
     var title: String!
     var overview: String!
-    var imageUrlString: String!
     var posterUrlString: String!
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(title, forKey: "title")
+        aCoder.encodeObject(posterUrlString, forKey: "posterPath")
+        aCoder.encodeObject(overview, forKey: "overview")
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        title = aDecoder.decodeObjectForKey("title") as! String
+        overview = aDecoder.decodeObjectForKey("overview") as! String
+        posterUrlString = aDecoder.decodeObjectForKey("posterPath") as! String
+    }
     
     init(dictionary: NSDictionary) {
         title = dictionary["title"] as! String
         overview = dictionary["overview"] as! String
-        imageUrlString = "https://image.tmdb.org/t/p/w342" + (dictionary["poster_path"] as! String)
-        posterUrlString = "https://image.tmdb.org/t/p/original" + (dictionary["poster_path"] as! String)
+        if let url = dictionary["poster_path"] as? String {
+            posterUrlString = "https://image.tmdb.org/t/p/w342" + url
+        } else {
+            posterUrlString = "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+        }
     }
     
     class func moviesWithArray(array: [NSDictionary]) -> [Movie] {

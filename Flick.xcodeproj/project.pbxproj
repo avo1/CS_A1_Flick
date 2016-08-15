@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		045FD8DB1D60CA2A0061AC2C /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045FD8DA1D60CA2A0061AC2C /* Movie.swift */; };
+		045FD8DD1D60DABB0061AC2C /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045FD8DC1D60DABB0061AC2C /* DataManager.swift */; };
 		182749791D1F85D10029B040 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182749781D1F85D10029B040 /* MovieCell.swift */; };
 		18AEA5581D16E6D500A61E85 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AEA5571D16E6D500A61E85 /* AppDelegate.swift */; };
 		18AEA55D1D16E6D500A61E85 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18AEA55B1D16E6D500A61E85 /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		045FD8DA1D60CA2A0061AC2C /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		045FD8DC1D60DABB0061AC2C /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		182749781D1F85D10029B040 /* MovieCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
 		18AEA5541D16E6D500A61E85 /* Flick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flick.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18AEA5571D16E6D500A61E85 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				18AEA5601D16E6D600A61E85 /* LaunchScreen.storyboard */,
 				18AEA5631D16E6D600A61E85 /* Info.plist */,
 				18AEA5691D16E73500A61E85 /* MoviesViewController.swift */,
+				045FD8DC1D60DABB0061AC2C /* DataManager.swift */,
 				045FD8DA1D60CA2A0061AC2C /* Movie.swift */,
 			);
 			path = Flick;
@@ -221,6 +224,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18AEA5581D16E6D500A61E85 /* AppDelegate.swift in Sources */,
+				045FD8DD1D60DABB0061AC2C /* DataManager.swift in Sources */,
 				18AEA56A1D16E73500A61E85 /* MoviesViewController.swift in Sources */,
 				182749791D1F85D10029B040 /* MovieCell.swift in Sources */,
 				18F903221D256F2000044F2E /* DetailViewController.swift in Sources */,
