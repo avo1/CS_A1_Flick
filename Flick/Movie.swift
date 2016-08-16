@@ -21,13 +21,15 @@ class Movie: NSObject, NSCoding {
         aCoder.encodeObject(overview, forKey: "overview")
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    convenience required init(coder aDecoder: NSCoder) {
+        self.init()
         title = aDecoder.decodeObjectForKey("title") as! String
         overview = aDecoder.decodeObjectForKey("overview") as! String
         posterUrlString = aDecoder.decodeObjectForKey("posterPath") as! String
     }
     
-    init(dictionary: NSDictionary) {
+    convenience init(dictionary: NSDictionary) {
+        self.init()
         title = dictionary["title"] as! String
         overview = dictionary["overview"] as! String
         if let url = dictionary["poster_path"] as? String {
