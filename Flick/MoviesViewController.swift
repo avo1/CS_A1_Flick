@@ -22,8 +22,9 @@ class MoviesViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        fetchMovie(.File)
-        
+//        fetchMovie(.File)
+        fetchMovie(.Realm)
+
         let documentDirectoryURL = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
         print("documentDirectoryURL", documentDirectoryURL)
         
@@ -81,6 +82,9 @@ class MoviesViewController: UIViewController {
         case .File:
             movies = DataManager.loadFromFile()
             print("load from file")
+        case .Realm:
+            movies = DataManager.loadFromRealm()
+            print("load from Realm")
         default:
             print("ehhh, where do you want to load the data from?")
         }
@@ -94,6 +98,9 @@ class MoviesViewController: UIViewController {
         case .File:
             DataManager.saveToFile(movies)
             print("saved to file")
+        case .Realm:
+            DataManager.saveToRealm(movies)
+            print("saved to Realm")
         default:
             print("unknown type")
         }

@@ -7,27 +7,31 @@
 //
 
 import UIKit
+import RealmSwift
+import Realm
 
-class Movie: NSObject, NSCoding {
+class Movie: Object {
     // Make sure to inherrit the class from NSObject, NScoding
-    // only then you can archive 
-    var title: String!
-    var overview: String!
-    var posterUrlString: String!
-    
+    // only then you can archive
+    dynamic var title = ""
+    dynamic var overview = ""
+    dynamic var posterUrlString = ""
+
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(title, forKey: "title")
         aCoder.encodeObject(posterUrlString, forKey: "posterPath")
         aCoder.encodeObject(overview, forKey: "overview")
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    convenience init(coder aDecoder: NSCoder) {
+        self.init()
         title = aDecoder.decodeObjectForKey("title") as! String
         overview = aDecoder.decodeObjectForKey("overview") as! String
         posterUrlString = aDecoder.decodeObjectForKey("posterPath") as! String
     }
-    
-    init(dictionary: NSDictionary) {
+
+    convenience init(dictionary: NSDictionary) {
+        self.init()
         title = dictionary["title"] as! String
         overview = dictionary["overview"] as! String
         if let url = dictionary["poster_path"] as? String {
@@ -36,7 +40,7 @@ class Movie: NSObject, NSCoding {
             posterUrlString = "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
         }
     }
-    
+
     class func moviesWithArray(array: [NSDictionary]) -> [Movie] {
         var movies = [Movie]()
         

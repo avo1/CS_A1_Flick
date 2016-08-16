@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import RealmSwift
 
 enum DataStorageType {
-    case NSUserDefaults, File, CoreData
+    case NSUserDefaults, File, CoreData, Realm
 }
 
 class DataManager {
@@ -47,11 +48,20 @@ class DataManager {
     }
     
     static func loadFromRealm() -> [Movie]? {
-        // IMPLEMENT THIS
-        return []
+        return Array(try! Realm().objects(Movie))
     }
     
     static func saveToRealm(movies: [Movie]?) {
-        // IMPLEMENT THIS
+        if let movies = movies {
+            // Get the default Realm
+            let realm = try! Realm()
+            try! realm.write {
+                realm.deleteAll()
+                movies.forEach({ movie in
+                    realm.add(movie)
+                })
+            }
+            print("Realm path: \(realm.configuration.fileURL)")
+        }
     }
 }
