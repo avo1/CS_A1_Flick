@@ -29,24 +29,24 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         // fetch movie
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
-        let request = NSURLRequest(
-            URL: url!,
-            cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
+        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let request = URLRequest(
+            url: url!,
+            cachePolicy: NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData,
             timeoutInterval: 10)
         
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+        let session = URLSession(
+            configuration: URLSessionConfiguration.default,
             delegate: nil,
-            delegateQueue: NSOperationQueue.mainQueue()
+            delegateQueue: OperationQueue.main
         )
         
-        let task: NSURLSessionDataTask =
-            session.dataTaskWithRequest(request,
+        let task: URLSessionDataTask =
+            session.dataTask(with: request,
                                         completionHandler: { (dataOrNil, response, error) in
                                             if let data = dataOrNil {
-                                                if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-                                                    data, options:[]) as? NSDictionary {
+                                                if let responseDictionary = try! JSONSerialization.jsonObject(
+                                                    with: data, options:[]) as? NSDictionary {
                                                     print("response: \(responseDictionary)")
                                                     self.movies = responseDictionary["results"] as! [NSDictionary]
                                                     self.tableView.reloadData()
@@ -63,36 +63,36 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return movies.count
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell") as! MovieCell!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as! MovieCell!
         //cell.textLabel!.text = (movies[indexPath.row]["title"] as! String)
-        cell.titleLabel.text = (movies[indexPath.row]["title"] as! String)
-        cell.overviewLabel.text = (movies[indexPath.row]["overview"] as! String)
+        cell?.titleLabel.text = (movies[(indexPath as NSIndexPath).row]["title"] as! String)
+        cell?.overviewLabel.text = (movies[(indexPath as NSIndexPath).row]["overview"] as! String)
         
-        let posterUrlString = baseUrl + (movies[indexPath.row]["poster_path"] as! String)
+        let posterUrlString = baseUrl + (movies[(indexPath as NSIndexPath).row]["poster_path"] as! String)
         
-        cell.posterImage.setImageWithURL(NSURL(string: posterUrlString)!)
+        cell?.posterImage.setImageWith(URL(string: posterUrlString)!)
         
-        return cell
+        return cell!
         
     }
     
     // MARK: - Navigation
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        let nextVC = segue.destinationViewController as! DetailViewController
+        let nextVC = segue.destination as! DetailViewController
         
         let ip = tableView.indexPathForSelectedRow
-        selectedImageUrl = baseUrl + (movies[ip!.row]["poster_path"] as! String)
-        selectedOverview = (movies[ip!.row]["overview"] as! String)
+        selectedImageUrl = baseUrl + (movies[(ip! as NSIndexPath).row]["poster_path"] as! String)
+        selectedOverview = (movies[(ip! as NSIndexPath).row]["overview"] as! String)
         
         nextVC.overview = selectedOverview
         nextVC.imageUrlString = selectedImageUrl

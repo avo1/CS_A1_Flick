@@ -21,7 +21,7 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        posterImage.setImageWithURL(NSURL(string: imageUrlString)!)
+        posterImage.setImageWith(URL(string: imageUrlString)!)
         overviewLabel.text = overview
         
     }
